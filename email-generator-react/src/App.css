@@ -1,0 +1,262 @@
+
+/* =========================
+   BEFORE GENERATE → CENTER VIEW
+========================= */
+.app-bg.before {
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-direction: column;
+
+  background: radial-gradient(circle at top, #7c8cff, #5b5fe6, #3b2f8f);
+
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* =========================
+   AFTER GENERATE → TOP VIEW
+========================= */
+.app-bg.after {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: flex-start;
+
+  background: radial-gradient(circle at top, #7c8cff, #5b5fe6, #3b2f8f);
+
+  padding: 20px;
+  box-sizing: border-box;
+
+  gap: 20px;
+}
+
+/* =========================
+   MAIN INPUT CARD
+========================= */
+.app-container {
+  width: 100%;
+  max-width: 650px;
+
+  background: rgba(255, 255, 255, 0.9);
+  padding: 34px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  border: 1px solid rgba(255, 255, 255, 0.4);
+
+  transition: all 0.3s ease;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.app-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================
+   TITLE
+========================= */
+.title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 800;
+  color: #1f1f1f;
+  margin: 0;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  margin-bottom: 8px;
+}
+
+/* =========================
+   INPUT SPACING
+========================= */
+.input-box {
+  margin-bottom: 10px !important;
+}
+
+/* =========================
+   MUI FIX
+========================= */
+.MuiTextField-root,
+.MuiFormControl-root {
+  width: 100%;
+}
+
+/* =========================
+   GENERATE BUTTON
+========================= */
+.generate-btn {
+  background: linear-gradient(90deg, #4facfe, #00f2fe) !important;
+
+  padding: 12px !important;
+
+  font-weight: 700 !important;
+
+  border-radius: 12px !important;
+
+  text-transform: none !important;
+
+  transition: all 0.25s ease !important;
+}
+
+.generate-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 12px 25px rgba(0, 242, 254, 0.35);
+}
+
+/* =========================
+   LOADING
+========================= */
+.loader {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* =========================
+   ERROR
+========================= */
+.error {
+  color: #ff3b3b;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* =========================
+   OUTPUT BOX (optional old style)
+========================= */
+.output-box {
+  margin-top: 20px;
+  padding: 18px;
+
+  border-radius: 14px;
+  background: rgba(248, 249, 255, 0.95);
+
+  border: 1px solid #e6e6ff;
+
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.02);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* =========================
+   OUTPUT CARD (NEW WIDER FIX)
+========================= */
+.output-container {
+  width: 100%;
+  max-width: 900px;
+
+  background: rgba(248, 249, 255, 0.98);
+
+  padding: 25px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+
+  border: 1px solid #e6e6ff;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* =========================
+   BUTTON ROW
+========================= */
+.btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.btn-row button {
+  flex: 1;
+
+  padding: 9px 10px;
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  background: #f2f2f2;
+
+  transition: all 0.2s ease;
+}
+
+.btn-row button:hover {
+  background: #e6e6e6;
+  transform: translateY(-1px);
+}
+
+.btn-row button:nth-child(1) {
+  background: #dfe6ff;
+}
+
+.btn-row button:nth-child(1):hover {
+  background: #cdd7ff;
+}
+
+.btn-row button:nth-child(2) {
+  background: #ffe7d6;
+}
+
+.btn-row button:nth-child(2):hover {
+  background: #ffd4b5;
+}
+
+/* =========================
+   COPY BUTTON
+========================= */
+.copy-btn {
+  width: 100%;
+
+  margin-top: 10px;
+
+  padding: 12px;
+
+  border: none;
+
+  background: #111;
+  color: white;
+
+  border-radius: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.copy-btn:hover {
+  background: #000;
+  transform: scale(1.02);
+}

@@ -1,122 +1,240 @@
 import './App.css';
 import React, { useState } from 'react';
 import axios from 'axios';
-import { 
-    Container, TextField, Typography , Box, 
-    FormControl, Select, MenuItem, InputLabel, 
-    CircularProgress, Button 
+import {
+  TextField, Typography, Box,
+  FormControl, Select, MenuItem,
+  CircularProgress, Button
 } from '@mui/material';
 
-// The URL for your Spring Boot API
-const API_URL = 'http://localhost:8080/api/email/generate'; 
+const API_URL = 'http://localhost:8080/api/email/generate';
+const IMPROVE_API_URL = 'http://localhost:8080/api/email/improve';
 
 function App() {
-    const [emailContent, setEmailContent] = useState('');
-    const [tone, setTone] = useState('');
-    const [generatedReply, setGeneratedReply] = useState('');
-    // 👇 FIX 1: Corrected initialization to boolean/null
-    const [loading, setLoading] = useState(false); 
-    const [error, setError] = useState(null);
 
-    const handleSubmit = async () => {
-        setLoading(true);
-        setError(null);
-        try{
-          const response = await axios.post("http://localhost:8080/api/email/generate",{
-            emailContent,
-            tone
-        });
-        setGeneratedReply(typeof response.data === 'string' ? response.data : JSON.stringify(response.data))
-        } catch (error) {
-          setError('Failed to generated email reply. Please try again');
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
-    };
+  const [emailContent, setEmailContent] = useState('');
+  const [tone, setTone] = useState('');
+  const [generatedReply, setGeneratedReply] = useState('');
+  const [editedReply, setEditedReply] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    return (
-        <Container maxWidth="md" sx={{py:4}}>
-            <Typography variant='h3' component="h1" gutterBottom>
-                Email Reply Generator
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post(API_URL, {
+        emailContent,
+        tone
+      });
+
+      const result =
+        typeof response.data === 'string'
+          ? response.data
+          : JSON.stringify(response.data);
+
+      setGeneratedReply(result);
+      setEditedReply(result);
+      setIsEditing(false);
+
+    } catch (err) {
+      setError('Failed to generate email reply. Please try again');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleImprove = async (mode) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post(IMPROVE_API_URL, {
+        emailContent: generatedReply,
+        tone,
+        mode
+      });
+
+      const result =
+        typeof response.data === 'string'
+          ? response.data
+          : JSON.stringify(response.data);
+
+      setGeneratedReply(result);
+      setEditedReply(result);
+      setIsEditing(false);
+
+    } catch (err) {
+      setError('Failed to improve reply. Please try again');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegenerateFromEdit = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post(IMPROVE_API_URL, {
+        emailContent: editedReply,
+        tone,
+        mode: "rewrite"
+      });
+
+      const result =
+        typeof response.data === 'string'
+          ? response.data
+          : JSON.stringify(response.data);
+
+      setGeneratedReply(result);
+      setEditedReply(result);
+      setIsEditing(false);
+
+    } catch (err) {
+      setError('Failed to regenerate edited reply');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const hasOutput = generatedReply && generatedReply.length > 0;
+
+  return (
+    <div className={`app-bg ${hasOutput ? "after" : "before"}`}>
+
+      {/* ================= INPUT BOX ================= */}
+      <Box className="app-container">
+
+        <Typography className="title">
+          Email Reply Generator
+        </Typography>
+
+        <Typography className="subtitle">
+          Generate AI email replies
+        </Typography>
+
+        <TextField
+          className="input-box"
+          fullWidth
+          label="Email Content"
+          multiline
+          rows={4}
+          value={emailContent}
+          onChange={(e) => setEmailContent(e.target.value)}
+        />
+
+        <FormControl fullWidth className="input-box">
+          <Select
+            value={tone}
+            onChange={(e) => setTone(e.target.value)}
+            displayEmpty
+          >
+            <MenuItem value="">Select Tone</MenuItem>
+            <MenuItem value="formal">Formal</MenuItem>
+            <MenuItem value="friendly">Friendly</MenuItem>
+            <MenuItem value="professional">Professional</MenuItem>
+          </Select>
+        </FormControl>
+
+        <Button
+          className="generate-btn"
+          variant="contained"
+          fullWidth
+          onClick={handleSubmit}
+          disabled={!emailContent || loading}
+        >
+          Generate Reply
+        </Button>
+
+        {loading && (
+          <Box className="loader">
+            <CircularProgress />
+          </Box>
+        )}
+
+        {error && <Box className="error">{error}</Box>}
+
+      </Box>
+
+      {/* ================= OUTPUT BOX ================= */}
+      {hasOutput && (
+        <Box className="output-container">
+
+          <Typography variant="h6">
+            Generated Reply
+          </Typography>
+
+          {!isEditing ? (
+            <Typography sx={{ whiteSpace: "pre-line", mt: 1 }}>
+              {generatedReply}
             </Typography>
+          ) : (
+            <TextField
+              fullWidth
+              multiline
+              rows={6}
+              value={editedReply}
+              onChange={(e) => setEditedReply(e.target.value)}
+              sx={{ mt: 1 }}
+            />
+          )}
 
-            <Box sx={{mx: 3}}>
-                <TextField
-                    fullWidth
-                    multiline
-                    rows={6}
-                    variant='outlined'
-                    label='Original Email Content'
-                    value={emailContent}
-                    onChange={(e) => setEmailContent(e.target.value)}
-                    sx={{mb:2}}
-                />
-                
-                <FormControl fullWidth sx={{mb:2}}>
-                    {/* 👇 Added unique id for InputLabel */}
-                    <InputLabel id="tone-label">Tone (Optional)</InputLabel>
-                    <Select 
-                        labelId="tone-label" 
-                        value={tone || ''}
-                        label={"Tone (Optional)"}
-                        onChange={(e) => setTone(e.target.value)}
-                    >
-                        <MenuItem value="">None</MenuItem>
-                        <MenuItem value="professional">Professional</MenuItem>
-                        <MenuItem value="casual">Casual</MenuItem>
-                        <MenuItem value="friendly">Friendly</MenuItem>
-                    </Select>
-                </FormControl>
+          {!isEditing ? (
+            <button
+              className="copy-btn"
+              onClick={() => setIsEditing(true)}
+            >
+              ✏️ Edit Reply
+            </button>
+          ) : (
+            <div className="btn-row">
 
-                <Button
-                    // 👇 FIX 2: Corrected typo 'conatined' -> 'contained'
-                    variant='contained' 
-                    onClick={handleSubmit}
-                    // The button should be disabled if no content OR loading
-                    disabled={!emailContent.trim() || loading} 
-                    fullWidth
-                    size="large"
-                    color='primary'
-                >
-                    {loading ? <CircularProgress size={24} color="inherit" /> : "Generate Reply"}
-                </Button>
-            </Box>
+              <button onClick={() => setIsEditing(false)}>
+                Save
+              </button>
 
-            {/* Display Error Message */}
-            {error && (
-                <Box sx={{mx: 3, my: 2, p: 2, border: '1px solid red'}}>
-                    <Typography color='error'>{error}</Typography>
-                </Box>
-            )}
+              <button onClick={handleRegenerateFromEdit}>
+                🔁 Regenerate
+              </button>
 
+            </div>
+          )}
 
-            {/* 👇 FIX 3: Corrected JSX conditional rendering syntax */}
-            {generatedReply && (
-                <Box sx={{mt:3, mx: 3}}>
-                    <Typography variant='h6' gutterBottom>
-                        Generated Reply:
-                    </Typography>
-                    <TextField
-                        fullWidth
-                        multiline
-                        rows={6}
-                        variant='outlined'
-                        value={generatedReply}
-                        inputProps={{readOnly: true}}
-                    />
+          {!isEditing && (
+            <div className="btn-row">
 
-                    <Button
-                        variant='outlined'
-                        sx={{ mt:2}}
-                        onClick={() => navigator.clipboard.writeText(generatedReply)}
-                    >
-                        Copy to Clipboard
-                    </Button>
-                </Box>
-            )}
-        </Container>
-    );
+              <button onClick={() => handleImprove("short")}>
+                Shorter
+              </button>
+
+              <button onClick={() => handleImprove("polite")}>
+                Polite
+              </button>
+
+              <button onClick={() => handleImprove("formal")}>
+                Formal
+              </button>
+
+            </div>
+          )}
+
+          {!isEditing && (
+            <button
+              className="copy-btn"
+              onClick={() => navigator.clipboard.writeText(generatedReply)}
+            >
+              Copy Reply
+            </button>
+          )}
+
+        </Box>
+      )}
+
+    </div>
+  );
 }
 
 export default App;

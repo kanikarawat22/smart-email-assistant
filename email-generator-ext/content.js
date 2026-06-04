@@ -1,4 +1,5 @@
 console.log("Email Generator Extension - Content Script Loaded");
+console.log("TESTING SCRIPT RUNNING: " + document.body.tagName); 
 
 
 function createAIButton() {
@@ -160,3 +161,4 @@ observer.observe(document.body, {
     childList: true,
     subtree: true
 });
+
