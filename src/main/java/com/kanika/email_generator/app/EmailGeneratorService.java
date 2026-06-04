@@ -15,7 +15,6 @@ public class EmailGeneratorService {
 
     private final WebClient webClient;
 
-    private final EmailHistoryRepository emailHistoryRepository;
     
     @Value("${gemini.api.url}")
     private String geminiApiUrl;
