@@ -7,8 +7,11 @@ import {
   CircularProgress, Button
 } from '@mui/material';
 
-const API_URL = 'http://localhost:8080/api/email/generate';
-const IMPROVE_API_URL = 'http://localhost:8080/api/email/improve';
+
+const API_URL = 'https://smart-email-assistant-jjay.onrender.com/api/email/generate';
+const IMPROVE_API_URL = 'https://smart-email-assistant-jjay.onrender.com/api/email/improve';
+//const API_URL = 'http://localhost:8080/api/email/generate';
+//const IMPROVE_API_URL = 'http://localhost:8080/api/email/improve';
 
 function App() {
 
